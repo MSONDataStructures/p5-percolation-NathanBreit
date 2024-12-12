@@ -22,7 +22,7 @@ public class PercolationVisualizer {
 
     // input file to visualize
     private static final String FILE_PATH =
-            "./percolation-test-files/input10-no.txt";
+            "./percolation-test-files/input20.txt";
 
     // delay in milliseconds (controls animation speed)
     private static final int DELAY = 100;

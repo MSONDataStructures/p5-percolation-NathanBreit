@@ -20,12 +20,13 @@ public class Percolation {
         bottomNode =  n * n + 1;
         topNode = n * n;
         numOfOpenSites = 0;
-        n = n;
+        // To initialize the instance field.
+        this.n = n;
     }
 
     public void open(int row, int col) {
         // TODO: open site (row, col) if it is not open already
-        if (inRange(row, col)) throw new IllegalArgumentException("outside of range");
+        if (!inRange(row, col)) throw new IllegalArgumentException("outside of range");
         int current = mapping2Dto1D(row, col);
         if (isOpen(row, col)) {
             return;

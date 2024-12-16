@@ -8,6 +8,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private WeightedQuickUnionUF grid;
+    private WeightedQuickUnionUF noBackwashGrid;
     private boolean[][] arr;
     private int numOfOpenSites;
     private int topNode;
@@ -17,6 +18,7 @@ public class Percolation {
     public Percolation(int n) {
         arr = new boolean[n][n];
         grid = new WeightedQuickUnionUF(n * n + 2);
+        noBackwashGrid = new WeightedQuickUnionUF(n * n + 1);
         bottomNode =  n * n + 1;
         topNode = n * n;
         numOfOpenSites = 0;
@@ -38,6 +40,7 @@ public class Percolation {
         // Link nodes in first row to "top" node
         if (row == 1) {
             grid.union(topNode, current);
+            noBackwashGrid.union(topNode, current);
         }
         // Link nodes in bottom row to "bottom" node
         if (row == n) {
@@ -46,18 +49,22 @@ public class Percolation {
         // Link nodes on left colum
         if (inRange(row, col-1) && isOpen(row, col-1)) {
             grid.union(current, mapping2Dto1D(row, col-1));
+            noBackwashGrid.union(current, mapping2Dto1D(row, col-1));
         }
         // Link nodes on right colum
         if (inRange(row, col+1) && isOpen(row, col+1)) {
             grid.union(current, mapping2Dto1D(row, col+1));
+            noBackwashGrid.union(current, mapping2Dto1D(row, col+1));
         }
         // Link nodes on top
         if (inRange(row-1, col) && isOpen(row-1, col)) {
             grid.union(current, mapping2Dto1D(row-1, col));
+            noBackwashGrid.union(current, mapping2Dto1D(row-1, col));
         }
         // Link nodes on bottom
         if (inRange(row+1, col) && isOpen(row+1, col)) {
             grid.union(current, mapping2Dto1D(row+1, col));
+            noBackwashGrid.union(current, mapping2Dto1D(row+1, col));
         }
     }
 
@@ -68,7 +75,8 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         // TODO: is site (row, col) full?
-        return grid.find(mapping2Dto1D(row, col)) == grid.find(topNode);
+        // Only returns true if both UF connect to topNode.
+        return (grid.find(mapping2Dto1D(row, col)) == grid.find(topNode)) && (noBackwashGrid.find(mapping2Dto1D(row, col)) == noBackwashGrid.find(topNode));
     }
 
     public int numberOfOpenSites() {
